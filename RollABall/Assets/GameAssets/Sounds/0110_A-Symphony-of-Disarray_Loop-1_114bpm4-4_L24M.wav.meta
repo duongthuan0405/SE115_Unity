@@ -1,0 +1,29 @@
+fileFormatVersion: 2
+guid: 17ba4253fc7fd4ea7804dece25fb8f32
+AudioImporter:
+  externalObjects: {}
+  serializedVersion: 6
+  defaultSettings:
+    loadType: 0
+    sampleRateSetting: 0
+    sampleRateOverride: 44100
+    compressionFormat: 1
+    quality: 1
+    conversionMode: 0
+  platformSettingOverrides: {}
+  forceToMono: 0
+  normalize: 1
+  preloadAudioData: 1
+  loadInBackground: 0
+  ambisonic: 0
+  3D: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 217536
+  packageName: A Symphony of Disarray - Game Music Pack
+  packageVersion: 1.0
+  assetPath: Assets/A-Symphony-of-Disarray_GameMusicPack/01 Loops/0110_A-Symphony-of-Disarray_Loop-1_114bpm4-4_L24M.wav
+  uploadId: 491571

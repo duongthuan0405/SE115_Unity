@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] TextMeshProUGUI scoreText;
     [SerializeField] GameObject winText;
     [SerializeField] GameObject listPickUp;
+    [SerializeField] AudioClip collectionSound;
 
     private int jumpTimes = 0;
     private float normalForceMove;
@@ -88,6 +89,10 @@ public class PlayerController : MonoBehaviour
             score++;
             SetScore();
             ShowWinNotification();
+            if(collectionSound)
+            {
+                AudioSource.PlayClipAtPoint(collectionSound, transform.position, 1f);
+            }    
         }    
     }
 
