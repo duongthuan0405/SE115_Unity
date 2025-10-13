@@ -1,7 +1,8 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -14,22 +15,55 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject winText;
     [SerializeField] GameObject listPickUp;
     [SerializeField] AudioClip collectionSound;
+    [SerializeField] TextMeshProUGUI timeText;
 
     private int jumpTimes = 0;
     private float normalForceMove;
     private int score = 0;
     private int winScore = 26;
+    private System.Timers.Timer timer;
+    private int totalTime = 10;
+    private bool isGameFinished;
 
     private Rigidbody rb;
     private Vector2 movementInput;
     void Start()
     {
+        isGameFinished = false;
         rb = this.gameObject.GetComponent<Rigidbody>();
         normalForceMove = forceMove;
         score = 0;
         SetScore();
         winScore = listPickUp.transform.childCount;
         winText.SetActive(false);
+        countDownAsync();
+    }
+
+    private async Task countDownAsync()
+    {
+        int remainTime = totalTime;
+        TimeSpan timeSpan;
+        while (!isGameFinished)
+        {
+            timeSpan = TimeSpan.FromSeconds(remainTime);
+            timeText.text = timeSpan.ToString(@"mm\:ss");
+            if(remainTime <= 0)
+            {
+                break;
+            }
+            await Task.Delay(1000);
+            remainTime--;
+        }
+
+        isGameFinished = true;
+
+        if(score < winScore)
+        {
+            winText.GetComponentInChildren<TextMeshProUGUI>().text = "You Lose";
+            winText.SetActive(true);
+        }
+
+        
     }
 
     private void FixedUpdate()
@@ -75,15 +109,12 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            jumpTimes = 0;
-        }
+        jumpTimes = 0;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("PickUp"))
+        if (other.CompareTag("PickUp") && !isGameFinished)
         {
             other.gameObject.SetActive(false);
             score++;
@@ -98,8 +129,13 @@ public class PlayerController : MonoBehaviour
 
     private void ShowWinNotification()
     {
-        if(score >= winScore)
+
+        if (score >= winScore)
+        {
+            winText.GetComponentInChildren<TextMeshProUGUI>().text = "You Win";
             winText.SetActive(true);
+            isGameFinished = true;
+        }
     }
 
     private void SetScore()
