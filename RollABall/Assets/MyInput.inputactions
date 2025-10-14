@@ -32,15 +32,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "Replay",
-                    "type": "Button",
-                    "id": "6afd9275-fff6-4739-91c8-a6b63d6b32f9",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -175,15 +166,32 @@
                     "action": "Boost",
                     "isComposite": false,
                     "isPartOfComposite": false
-                },
+                }
+            ]
+        },
+        {
+            "name": "GameController",
+            "id": "5f95370d-7ce2-416c-ba35-2b680dbb9461",
+            "actions": [
+                {
+                    "name": "Restart",
+                    "type": "Button",
+                    "id": "bd8e6925-e637-4ece-8cb6-28aac447e7fe",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
                 {
                     "name": "",
-                    "id": "62161042-92ac-434d-a776-cf5862bd3121",
+                    "id": "56e4fb8b-688a-4c7b-847d-851d525ff939",
                     "path": "<Keyboard>/r",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Replay",
+                    "action": "Restart",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

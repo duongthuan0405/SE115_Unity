@@ -16,13 +16,17 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject listPickUp;
     [SerializeField] AudioClip collectionSound;
     [SerializeField] TextMeshProUGUI timeText;
+    [SerializeField] int totalSecond = 1000000;
+    [SerializeField] AudioClip colidWithEnemy;
+    [SerializeField] AudioClip victorySound;
+    [SerializeField] AudioClip gameOverSound;
 
     private int jumpTimes = 0;
     private float normalForceMove;
     private int score = 0;
-    private int winScore = 26;
+    private int winScore;
     private System.Timers.Timer timer;
-    private int totalTime = 10;
+
     private bool isGameFinished;
 
     private Rigidbody rb;
@@ -35,13 +39,14 @@ public class PlayerController : MonoBehaviour
         score = 0;
         SetScore();
         winScore = listPickUp.transform.childCount;
+        SetScore();
         winText.SetActive(false);
         countDownAsync();
     }
 
     private async Task countDownAsync()
     {
-        int remainTime = totalTime;
+        int remainTime = totalSecond;
         TimeSpan timeSpan;
         while (!isGameFinished)
         {
@@ -55,15 +60,23 @@ public class PlayerController : MonoBehaviour
             remainTime--;
         }
 
-        isGameFinished = true;
+        
 
-        if(score < winScore)
+        if(score < winScore && !isGameFinished)
         {
-            winText.GetComponentInChildren<TextMeshProUGUI>().text = "You Lose";
-            winText.SetActive(true);
+            isGameFinished = true;
+            onLose();
         }
 
         
+    }
+
+    private void onLose()
+    {
+        
+        winText.GetComponentInChildren<TextMeshProUGUI>().text = "You Lose";
+        AudioSource.PlayClipAtPoint(gameOverSound, transform.position, 1f);
+        winText.SetActive(true);
     }
 
     private void FixedUpdate()
@@ -110,6 +123,13 @@ public class PlayerController : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         jumpTimes = 0;
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            Destroy(gameObject);
+            isGameFinished = true;
+            AudioSource.PlayClipAtPoint(colidWithEnemy, transform.position, 1f);
+            onLose();
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -119,33 +139,33 @@ public class PlayerController : MonoBehaviour
             other.gameObject.SetActive(false);
             score++;
             SetScore();
-            ShowWinNotification();
+            onWin();
             if(collectionSound)
             {
                 AudioSource.PlayClipAtPoint(collectionSound, transform.position, 1f);
             }    
-        }    
+        } 
+           
     }
 
-    private void ShowWinNotification()
+    private void onWin()
     {
 
         if (score >= winScore)
         {
+
+            
+            Destroy(GameObject.FindGameObjectWithTag("Enemy"));
+            isGameFinished = true;
+
             winText.GetComponentInChildren<TextMeshProUGUI>().text = "You Win";
             winText.SetActive(true);
-            isGameFinished = true;
+            AudioSource.PlayClipAtPoint(victorySound, transform.position, 1f);
         }
     }
 
     private void SetScore()
     {
-        scoreText.text = "Score: " + score.ToString();
-    }
-
-    private void OnReplay()
-    {
-        Scene currentScene = SceneManager.GetActiveScene();
-        SceneManager.LoadScene(currentScene.name);
+        scoreText.text = "Score: " + score.ToString() + " / " + winScore.ToString();
     }
 }
